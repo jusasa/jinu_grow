@@ -1,22 +1,15 @@
-
-def infix_to_postfix(infix_expression):
-    priority = {'(' : 0,')' : 0,'+': 1, '-': 1, '*': 2, '/': 2}
-    postfix_expression = []
-    stack = []
-    for char in infix_expression:
-        if char not in priority:
-            postfix_expression.append(char)
-        elif char == '(':
-            stack.append(char)
-        elif char == ')':
-            while stack and stack[-1] != '(':
-                postfix_expression.append(stack.pop())
-            stack.pop()
+n = int(input())
+l = []
+for i in range(n):
+    l.append([*map(int,input().split())])
+dp = [0] * n
+for i in range(n):
+    dp[i] = l[i][0]
+    for j in range(n):
+        if j == 0:
+            dp[i] = max(dp[i], dp[i] + l[i][j], dp[i] + l[i][j + 1])
+        elif j == n - 1:
+            dp[i] = max(dp[i], dp[i] + l[i][j], dp[i] + l[i][j - 1])
         else:
-            while stack and priority[char] <= priority[stack[-1]]:
-                postfix_expression.append(stack.pop())
-            stack.append(char)
-    while stack:
-        postfix_expression.append(stack.pop())
-    return ''.join(postfix_expression)
-print(infix_to_postfix(input()))
+            dp[i] = max(dp[i], dp[i] + l[i][j], dp[i] + l[i][j - 1], dp[i] + l[i][j + 1])
+print(dp)
