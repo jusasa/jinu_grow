@@ -12,4 +12,4 @@ for i in range(n):
             dp[i] = max(dp[i], dp[i] + l[i][j], dp[i] + l[i][j - 1])
         else:
             dp[i] = max(dp[i], dp[i] + l[i][j], dp[i] + l[i][j - 1], dp[i] + l[i][j + 1])
-print(dp)
+print(max(dp))
