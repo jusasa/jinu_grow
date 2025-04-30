@@ -1,18 +1,34 @@
-n, m = map(int, input().split())
-l = sorted(map(int, input().split()))  # 입력을 정렬하여 사전 순으로 처리
-arr = [0] * m
-used = set()  # 중복 수열을 추적하기 위한 집합
+import sys
+input = sys.stdin.readline
+print = sys.stdout.write
 
-def nm(i):
-    if i == m:
-        seq = tuple(arr)  # 현재 수열을 튜플로 변환
-        if seq not in used:  # 중복 여부 확인
-            used.add(seq)
-            print(*arr)
-        return
-    for j in range(len(l)):
-        if i == 0 or arr[i - 1] <= l[j]:  # 비내림차순 조건
-            arr[i] = l[j]
-            nm(i + 1)
+n = int(input())
+a = [*map(int, input().split())]
+m = int(input())
 
-nm(0)
+# Precompute palindrome information using DP
+dp = [[False] * n for _ in range(n)]
+
+# Single character substrings are palindromes
+for i in range(n):
+    dp[i][i] = True
+
+# Two consecutive characters are palindromes if they are equal
+for i in range(n - 1):
+    if a[i] == a[i + 1]:
+        dp[i][i + 1] = True
+
+# Check for longer substrings
+for length in range(3, n + 1):  # length of the substring
+    for i in range(n - length + 1):
+        j = i + length - 1  # endpoint of the substring
+        if a[i] == a[j] and dp[i + 1][j - 1]:
+            dp[i][j] = True
+
+# Answer the queries
+for _ in range(m):
+    x, y = map(int, input().split())
+    if dp[x - 1][y - 1]:
+        print("1\n")
+    else:
+        print("0\n")
