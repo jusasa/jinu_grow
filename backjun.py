@@ -1,36 +1,53 @@
-import sys, heapq
+import sys
+from collections import deque
 input = sys.stdin.readline
-n = int(input())
-m = int(input())
-l = [[] for i in range(n + 1)]
-for i in range(m):
-    x, y, c = map(int, input().split())
-    l[x].append((y, c))
-    
-dist = [float('inf') for i in range(n + 1)]
-visited = [False for i in range(n + 1)]
-prev = [-1 for i in range(n + 1)]
+n, k = map(int, input().split())
+dist = [0] * 100001
+visited = [False] * 100001
+dq = deque()
+dq.append(n)
 
-x, y = map(int, input().split())
-dist[x] = 0
-st = []
-heapq.heappush(st, (0, x))
-while st:
-    d, v = heapq.heappop(st)
-    if visited[v]:
-        continue
-    visited[v] = True
-    for i in l[v]:
-        if dist[i[0]] > dist[v] + i[1]:
-            dist[i[0]] = dist[v] + i[1]
-            prev[i[0]] = v
-            heapq.heappush(st, (dist[i[0]], i[0]))
+while dq:
+    x = dq.popleft()
+    if x == k:  # 종료 조건
+        print(dist[x])
+        break
+    for nx, cost in ((x - 1, 1), (x + 1, 1), (x * 2, 0)):
+        if 0 <= nx < 100001 and not visited[nx]:
+            visited[nx] = True  # 큐에 추가한 후 방문 처리
+            if cost == 0:
+                dq.appendleft(nx)
+            else:
+                dq.append(nx)
+            dist[nx] = dist[x] + cost
 
-path = []
-current = y
-while current != -1:
-    path.append(current)
-    current = prev[current]
-print(dist[y]) 
-print(len(path))
-print(*path[::-1])    
+#--------------------------------------------
+
+from collections import deque
+n,k=map(int,input().split())
+limit=100001
+cnt=[0]*limit
+visited=[False]*limit
+def bfs(x,end):
+    queue=deque()
+    queue.append(x)
+
+    while queue:
+        x=queue.popleft()
+        if x==end:return cnt[x]
+        if -1<x*2<limit and visited[x*2]==0 :
+            queue.appendleft(x*2)
+            cnt[x*2]=cnt[x]
+            visited[x*2]=True
+        if -1<x-1<limit and visited[x-1]==0 :
+            queue.append(x-1)
+            cnt[x-1]=cnt[x]+1
+            visited[x-1]=True
+        if -1<x+1<limit and visited[x+1]==0 :
+            queue.append(x+1)
+            cnt[x+1]=cnt[x]+1
+            visited[x+1]=True
+
+
+
+print(bfs(n,k))
