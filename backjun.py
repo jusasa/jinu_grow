@@ -1,53 +1,29 @@
 import sys
-from collections import deque
 input = sys.stdin.readline
-n, k = map(int, input().split())
-dist = [0] * 100001
-visited = [False] * 100001
-dq = deque()
-dq.append(n)
+INF = int(1e9)
+te = int(input())
 
-while dq:
-    x = dq.popleft()
-    if x == k:  # 종료 조건
-        print(dist[x])
-        break
-    for nx, cost in ((x - 1, 1), (x + 1, 1), (x * 2, 0)):
-        if 0 <= nx < 100001 and not visited[nx]:
-            visited[nx] = True  # 큐에 추가한 후 방문 처리
-            if cost == 0:
-                dq.appendleft(nx)
-            else:
-                dq.append(nx)
-            dist[nx] = dist[x] + cost
-
-#--------------------------------------------
-
-from collections import deque
-n,k=map(int,input().split())
-limit=100001
-cnt=[0]*limit
-visited=[False]*limit
-def bfs(x,end):
-    queue=deque()
-    queue.append(x)
-
-    while queue:
-        x=queue.popleft()
-        if x==end:return cnt[x]
-        if -1<x*2<limit and visited[x*2]==0 :
-            queue.appendleft(x*2)
-            cnt[x*2]=cnt[x]
-            visited[x*2]=True
-        if -1<x-1<limit and visited[x-1]==0 :
-            queue.append(x-1)
-            cnt[x-1]=cnt[x]+1
-            visited[x-1]=True
-        if -1<x+1<limit and visited[x+1]==0 :
-            queue.append(x+1)
-            cnt[x+1]=cnt[x]+1
-            visited[x+1]=True
-
-
-
-print(bfs(n,k))
+for _ in range(te):
+    necy = 0
+    n, m, w = map(int, input().split())
+    shop = [[] for i in range(n + 1)]
+    for i in range(m):
+        s, e, t = map(int, input().split())
+        shop[s].append((e, t))
+        shop[e].append((s, t))
+    for i in range(w):
+        s ,e ,t = map(int, input().split())
+        shop[s].append((e, -t))
+    dist = [INF] * (n + 1)
+    dist[1] = 0
+    for i in range(n):
+        for j in range(1, n + 1):
+            for x, d in shop[j]:
+                if dist[x] > dist[j] + d: # dist[x] != INF 조건을 넣으면 처음 방문한 노드에서 음수사이클 여부 판별 가능하나 없으면 모든 노드에서의 음수사이클 여부 확인 가능
+                    dist[x] = dist[j] + d
+                    if i == n - 1:
+                        necy = 1
+    if necy:
+        print("YES")
+    else:
+        print("NO")
