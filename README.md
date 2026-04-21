@@ -5,7 +5,7 @@
 ---
 
 ### 스탯
-![Uploading image.png…]()
+<img width="1222" height="465" alt="image" src="https://github.com/user-attachments/assets/1e1c4fc8-e371-4a34-9020-513d60e0be54" />
 
 
 ### 특수스탯
